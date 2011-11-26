@@ -18,6 +18,7 @@
 #include "BinaryFile.h"
 #include <string>
 #include <vector>
+#include <stdint.h>
 
 /* $Revision: 1.5 $
  * This file contains the definition of the MachOBinaryFile class, and some
@@ -30,13 +31,13 @@
 // Given a little endian value x, load its value assuming big endian order
 // Note: must be able to take address of x
 // Note: Unlike the LH macro in BinaryFile.h, the paraeter is not a pointer
-#define _BMMH(x) ((unsigned)((Byte *)(&x))[3] + ((unsigned)((Byte *)(&x))[2] << 8) + \
-	((unsigned)((Byte *)(&x))[1] << 16) + ((unsigned)((Byte *)(&x))[0] << 24))
+#define _BMMH(x) ((unsigned)((uint8_t *)(&x))[3] + ((unsigned)((uint8_t *)(&x))[2] << 8) + \
+	((unsigned)((uint8_t *)(&x))[1] << 16) + ((unsigned)((uint8_t *)(&x))[0] << 24))
 // With this one, x IS a pounsigneder
-#define _BMMH2(x) ((unsigned)((Byte *)(x))[3] + ((unsigned)((Byte *)(x))[2] << 8) + \
-	((unsigned)((Byte *)(x))[1] << 16) + ((unsigned)((Byte *)(x))[0] << 24))
+#define _BMMH2(x) ((unsigned)((uint8_t *)(x))[3] + ((unsigned)((uint8_t *)(x))[2] << 8) + \
+	((unsigned)((uint8_t *)(x))[1] << 16) + ((unsigned)((uint8_t *)(x))[0] << 24))
 
-#define _BMMHW(x) (((unsigned)((Byte *)(&x))[1]) + ((unsigned)((Byte *)(&x))[0] << 8))
+#define _BMMHW(x) (((unsigned)((uint8_t *)(&x))[1]) + ((unsigned)((uint8_t *)(&x))[0] << 8))
 
 //#ifdef WIN32
 #pragma pack(1)
@@ -75,7 +76,7 @@ virtual size_t		getImageSize();
 virtual std::list<SectionInfo*>& GetEntryPoints(const char* pEntry = "main");
 virtual ADDRESS		GetMainEntryPoint();
 virtual ADDRESS		GetEntryPoint();
-		DWord		getDelta();
+		uint32_t	getDelta();
 virtual const char*	SymbolByAddress(ADDRESS dwAddr); // Get sym from addr
 virtual ADDRESS		GetAddressByName(const char* name,
 		bool		bNoTypeOK = false);					// Find addr given name	 

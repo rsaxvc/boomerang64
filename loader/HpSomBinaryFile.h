@@ -31,12 +31,13 @@
 #include "BinaryFile.h"
 #include "SymTab.h"
 #include <set>
+#include <stdint.h>
 
 struct import_entry {
     int         name;
     short       reserved2;
-    Byte        type;
-    Byte        reserved1;
+    uint8_t        type;
+    uint8_t        reserved1;
 };
 
 struct export_entry {
@@ -44,7 +45,7 @@ struct export_entry {
     int         name;
     int         value;
     int         size;       // Also misc_info
-    Byte        type;
+    uint8_t        type;
     char        reserved1;
     short       module_index;
 };

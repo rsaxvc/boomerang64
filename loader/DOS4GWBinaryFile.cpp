@@ -147,7 +147,7 @@ bool DOS4GWBinaryFile::RealLoad(const char* sName)
 	m_pFileName = sName;
 	FILE *fp = fopen(sName,"rb");
 
-	DWord lxoffLE, lxoff;
+	uint32_t lxoffLE, lxoff;
 	fseek(fp, 0x3c, SEEK_SET);
 	fread(&lxoffLE, 4, 1, fp);		// Note: peoffLE will be in Little Endian
 	lxoff = LMMH(lxoffLE);
@@ -212,7 +212,7 @@ bool DOS4GWBinaryFile::RealLoad(const char* sName)
 		    m_pSections[n].uNativeAddr=(ADDRESS)LMMH(m_pLXObjects[n].RelocBaseAddr);
 		    m_pSections[n].uHostAddr=(ADDRESS)(LMMH(m_pLXObjects[n].RelocBaseAddr) - LMMH(m_pLXObjects[0].RelocBaseAddr) + base);
 		    m_pSections[n].uSectionSize=LMMH(m_pLXObjects[n].VirtualSize);
-		    DWord Flags = LMMH(m_pLXObjects[n].ObjectFlags);
+		    uint32_t Flags = LMMH(m_pLXObjects[n].ObjectFlags);
 		    m_pSections[n].bBss		= 0; // TODO
 		    m_pSections[n].bCode		= Flags&0x4?1:0;
 		    m_pSections[n].bData		= Flags&0x4?0:1;
@@ -531,12 +531,12 @@ std::list<const char *> DOS4GWBinaryFile::getDependencyList()
 	return std::list<const char *>(); /* FIXME */
 }
 
-DWord DOS4GWBinaryFile::getDelta()
+uint32_t DOS4GWBinaryFile::getDelta()
 {
 	// Stupid function anyway: delta depends on section
 	// This should work for the header only
-	//	return (DWord)base - LMMH(m_pPEHeader->Imagebase); 
-	return (DWord)base - (DWord)m_pLXObjects[0].RelocBaseAddr;
+	//	return (uint32_t)base - LMMH(m_pPEHeader->Imagebase); 
+	return (uint32_t)base - (uint32_t)m_pLXObjects[0].RelocBaseAddr;
 }
 
 // This function is called via dlopen/dlsym; it returns a new BinaryFile

@@ -414,7 +414,7 @@ bool Win32BinaryFile::RealLoad(const char* sName)
 	m_pFileName = sName;
 	FILE *fp = fopen(sName,"rb");
 
-	DWord peoffLE, peoff;
+	uint32_t peoffLE, peoff;
 	fseek(fp, 0x3c, SEEK_SET);
 	fread(&peoffLE, 4, 1, fp);		// Note: peoffLE will be in Little Endian
 	peoff = LMMH(peoffLE);
@@ -465,7 +465,7 @@ bool Win32BinaryFile::RealLoad(const char* sName)
 		sect.uNativeAddr=(ADDRESS)(LMMH(o->RVA) + LMMH(m_pPEHeader->Imagebase));
 		sect.uHostAddr=(ADDRESS)(LMMH(o->RVA) + base);
 		sect.uSectionSize=LMMH(o->VirtualSize);
-		DWord Flags = LMMH(o->Flags);
+		uint32_t Flags = LMMH(o->Flags);
 		sect.bBss      = (Flags&IMAGE_SCN_CNT_UNINITIALIZED_DATA)?1:0;
 		sect.bCode     = (Flags&IMAGE_SCN_CNT_CODE)?1:0;
 		sect.bData     = (Flags&IMAGE_SCN_CNT_INITIALIZED_DATA)?1:0;
@@ -721,7 +721,7 @@ void printType(DWORD index, DWORD64 ImageBase)
 	got = dbghelp::SymGetTypeInfo(hProcess, ImageBase, index, dbghelp::TI_GET_SYMNAME, &name);
 	if (got) {
 		char nameA[1024];
-		WideCharToMultiByte(CP_ACP,0,name,-1,nameA,sizeof(nameA),0,NULL);
+		WideCharToMultiuint8_t(CP_ACP,0,name,-1,nameA,sizeof(nameA),0,NULL);
 		std::cout << nameA;
 		return;
 	}
@@ -1163,11 +1163,11 @@ std::list<const char *> Win32BinaryFile::getDependencyList()
 	return std::list<const char *>(); /* FIXME */
 }
 
-DWord Win32BinaryFile::getDelta() {
+uint32_t Win32BinaryFile::getDelta() {
 	// Stupid function anyway: delta depends on section
 	// This should work for the header only
-	//	return (DWord)base - LMMH(m_pPEHeader->Imagebase); 
-	return (DWord)base - (DWord)m_pPEHeader->Imagebase; 
+	//	return (uint32_t)base - LMMH(m_pPEHeader->Imagebase); 
+	return (uint32_t)base - (uint32_t)m_pPEHeader->Imagebase; 
 }
 
 // This function is called via dlopen/dlsym; it returns a new BinaryFile derived concrete object. After this object is

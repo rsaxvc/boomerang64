@@ -28,43 +28,44 @@
 #ifndef __EXEBINARYFILE_H__
 #define __EXEBINARYFILE_H_
 
+#include <stdint.h>
 #include "BinaryFile.h"
 
 typedef struct {            /*        PSP structure                 */
-    SWord int20h;           /* interrupt 20h                        */
-    SWord eof;              /* segment, end of allocation block     */
-    Byte res1;              /* reserved                             */
-    Byte dosDisp[5];        /* far call to DOS function dispatcher  */
-    Byte int22h[4];         /* vector for terminate routine         */
-    Byte int23h[4];         /* vector for ctrl+break routine        */
-    Byte int24h[4];         /* vector for error routine             */
-    Byte res2[22];          /* reserved                             */
-    SWord segEnv;           /* segment address of environment block */
-    Byte res3[34];          /* reserved                             */
-    Byte int21h[6];         /* opcode for int21h and far return     */
-    Byte res4[6];           /* reserved                             */
-    Byte fcb1[16];          /* default file control block 1         */
-    Byte fcb2[16];          /* default file control block 2         */
-    Byte res5[4];           /* reserved                             */
-    Byte cmdTail[0x80];     /* command tail and disk transfer area  */
+    uint16_t int20h;           /* interrupt 20h                        */
+    uint16_t eof;              /* segment, end of allocation block     */
+    uint8_t  res1;              /* reserved                             */
+    uint8_t  dosDisp[5];        /* far call to DOS function dispatcher  */
+    uint8_t  int22h[4];         /* vector for terminate routine         */
+    uint8_t  int23h[4];         /* vector for ctrl+break routine        */
+    uint8_t  int24h[4];         /* vector for error routine             */
+    uint8_t  res2[22];          /* reserved                             */
+    uint16_t segEnv;           /* segment address of environment block */
+    uint8_t  res3[34];          /* reserved                             */
+    uint8_t  int21h[6];         /* opcode for int21h and far return     */
+    uint8_t  res4[6];           /* reserved                             */
+    uint8_t  fcb1[16];          /* default file control block 1         */
+    uint8_t  fcb2[16];          /* default file control block 2         */
+    uint8_t  res5[4];           /* reserved                             */
+    uint8_t  cmdTail[0x80];     /* command tail and disk transfer area  */
 } PSP;
 
 typedef struct {            /*      EXE file header          */
-     Byte   sigLo;          /* .EXE signature: 0x4D 0x5A     */
-     Byte   sigHi;
-     SWord  lastPageSize;   /* Size of the last page         */
-     SWord  numPages;       /* Number of pages in the file   */
-     SWord  numReloc;       /* Number of relocation items    */
-     SWord  numParaHeader;  /* # of paragraphs in the header */
-     SWord  minAlloc;       /* Minimum number of paragraphs  */
-     SWord  maxAlloc;       /* Maximum number of paragraphs  */
-     SWord  initSS;         /* Segment displacement of stack */
-     SWord  initSP;         /* Contents of SP at entry       */
-     SWord  checkSum;       /* Complemented checksum         */
-     SWord  initIP;         /* Contents of IP at entry       */
-     SWord  initCS;         /* Segment displacement of code  */
-     SWord  relocTabOffset; /* Relocation table offset       */
-     SWord  overlayNum;     /* Overlay number                */
+     uint8_t    sigLo;          /* .EXE signature: 0x4D 0x5A     */
+     uint8_t    sigHi;
+     uint16_t  lastPageSize;   /* Size of the last page         */
+     uint16_t  numPages;       /* Number of pages in the file   */
+     uint16_t  numReloc;       /* Number of relocation items    */
+     uint16_t  numParaHeader;  /* # of paragraphs in the header */
+     uint16_t  minAlloc;       /* Minimum number of paragraphs  */
+     uint16_t  maxAlloc;       /* Maximum number of paragraphs  */
+     uint16_t  initSS;         /* Segment displacement of stack */
+     uint16_t  initSP;         /* Contents of SP at entry       */
+     uint16_t  checkSum;       /* Complemented checksum         */
+     uint16_t  initIP;         /* Contents of IP at entry       */
+     uint16_t  initCS;         /* Segment displacement of code  */
+     uint16_t  relocTabOffset; /* Relocation table offset       */
+     uint16_t  overlayNum;     /* Overlay number                */
 } exeHeader;
 
 class ExeBinaryFile : public BinaryFile
@@ -103,12 +104,12 @@ virtual bool    DisplayDetails(const char* fileName, FILE* f = stdout);
 private:
 
 
-    exeHeader* m_pHeader;               // Pointer to header
-    Byte*   m_pImage;                   // Pointer to image
-    int     m_cbImage;                  // Size of image
-    int     m_cReloc;                   // Number of relocation entries
-    DWord*  m_pRelocTable;              // The relocation table
-    const char *m_pFileName;
+    exeHeader*  m_pHeader;               // Pointer to header
+    uint8_t *   m_pImage;                   // Pointer to image
+    int         m_cbImage;                  // Size of image
+    int         m_cReloc;                   // Number of relocation entries
+    uint32_t*   m_pRelocTable;              // The relocation table
+    const char* m_pFileName;
 };
 
 #endif      // ifndef __EXEBINARYFILE_H__

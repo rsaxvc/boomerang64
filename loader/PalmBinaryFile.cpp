@@ -23,6 +23,7 @@
 #include <assert.h>
 #include <cstring>
 #include <stdlib.h>
+#include <stdint.h>
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 #pragma warning(disable:4786)
 #endif
@@ -371,17 +372,17 @@ int PalmBinaryFile::GetAppID() const
 
 // Patterns for Code Warrior
 #define WILD 0x4AFC
-static SWord CWFirstJump[] = {
+static uint16_t CWFirstJump[] = {
     0x0, 0x1,           // ? All Pilot programs seem to start with this
     0x487a, 0x4,        // pea 4(pc)
     0x0697, WILD, WILD, // addil #number, (a7)
     0x4e75};            // rts
-static SWord CWCallMain[] = {
+static uint16_t CWCallMain[] = {
     0x487a, 14,         // pea 14(pc)
     0x487a, 4,          // pea 4(pc)
     0x0697, WILD, WILD, // addil #number, (a7)
     0x4e75};            // rts
-static SWord GccCallMain[] = {
+static uint16_t GccCallMain[] = {
     0x3F04,             // movew d4, -(a7)
     0x6100, WILD,       // bsr xxxx
     0x3F04,             // movew d4, -(a7)
@@ -394,17 +395,17 @@ static SWord GccCallMain[] = {
  * OVERVIEW:      Try to find a pattern
  * PARAMETERS:    start - pointer to code to start searching
  *                patt - pattern to look for
- *                pattSize - size of the pattern (in SWords)
- *                max - max number of SWords to search
+ *                pattSize - size of the pattern (in uint16_ts)
+ *                max - max number of uint16_ts to search
  * RETURNS:       0 if no match; pointer to start of match if found
  *============================================================================*/
-SWord* findPattern(SWord* start, const SWord* patt, int pattSize, int max)
+uint16_t* findPattern(uint16_t* start, const uint16_t* patt, int pattSize, int max)
 {
-    const SWord* last = start + max;
+    const uint16_t* last = start + max;
     for (; start < last; start++) {
         bool found = true;
         for (int i=0; i < pattSize; i++) {
-            SWord curr = patt[i];
+            uint16_t curr = patt[i];
             if ((curr != WILD) && (curr != start[i])) {
                 found = false;
                 break;              // Mismatch
@@ -426,19 +427,19 @@ ADDRESS PalmBinaryFile::GetMainEntryPoint()
     if (pSect == 0)
         return 0;               // Failed
     // Return the start of the code1 section
-    SWord* startCode = (SWord*) pSect->uHostAddr;
+    uint16_t* startCode = (uint16_t*) pSect->uHostAddr;
     int delta = pSect->uHostAddr - pSect->uNativeAddr;
 
     // First try the CW first jump pattern
-    SWord* res = findPattern(startCode, CWFirstJump,
-        sizeof(CWFirstJump) / sizeof(SWord), 1);
+    uint16_t* res = findPattern(startCode, CWFirstJump,
+        sizeof(CWFirstJump) / sizeof(uint16_t), 1);
     if (res) {
         // We have the code warrior first jump. Get the addil operand
         int addilOp = (startCode[5] << 16) + startCode[6];
-        SWord* startupCode = (SWord*)((int)startCode + 10 + addilOp);
-        // Now check the next 60 SWords for the call to PilotMain
+        uint16_t* startupCode = (uint16_t*)((int)startCode + 10 + addilOp);
+        // Now check the next 60 uint16_ts for the call to PilotMain
         res = findPattern(startupCode, CWCallMain,
-            sizeof(CWCallMain) / sizeof(SWord), 60);
+            sizeof(CWCallMain) / sizeof(uint16_t), 60);
         if (res) {
             // Get the addil operand
             addilOp = (res[5] << 16) + res[6];
@@ -452,10 +453,10 @@ ADDRESS PalmBinaryFile::GetMainEntryPoint()
     }
     // Check for gcc call to main
     res = findPattern(startCode, GccCallMain,
-        sizeof(GccCallMain) / sizeof(SWord), 75);
+        sizeof(GccCallMain) / sizeof(uint16_t), 75);
     if (res) {
         // Get the operand to the bsr
-        SWord bsrOp = res[7];
+        uint16_t bsrOp = res[7];
         return (ADDRESS)res + 14 + bsrOp - delta;
     }
 

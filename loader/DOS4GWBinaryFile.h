@@ -17,6 +17,7 @@
 
 #include "BinaryFile.h"
 #include <string>
+#include <stdint.h>
 
 /* $Revision: 1.1 $
  * This file contains the definition of the DOS4GWBinaryFile class, and some
@@ -33,17 +34,17 @@
 // Given a little endian value x, load its value assuming little endian order
 // Note: must be able to take address of x
 // Note: Unlike the LH macro in BinaryFile.h, the paraeter is not a pointer
-#define LMMH(x) ((unsigned)((Byte *)(&x))[0] + ((unsigned)((Byte *)(&x))[1] << 8) + \
-	((unsigned)((Byte *)(&x))[2] << 16) + ((unsigned)((Byte *)(&x))[3] << 24))
+#define LMMH(x) ((unsigned)((uint8_t  *)(&x))[0] + ((unsigned)((uint8_t  *)(&x))[1] << 8) + \
+	((unsigned)((uint8_t  *)(&x))[2] << 16) + ((unsigned)((uint8_t  *)(&x))[3] << 24))
 // With this one, x IS a pounsigneder
-#define LMMH2(x) ((unsigned)((Byte *)(x))[0] + ((unsigned)((Byte *)(x))[1] << 8) + \
-	((unsigned)((Byte *)(x))[2] << 16) + ((unsigned)((Byte *)(x))[3] << 24))
-#define LMMHw(x) ((unsigned)((Byte *)(&x))[0] + ((unsigned)((Byte *)(&x))[1] << 8))
+#define LMMH2(x) ((unsigned)((uint8_t  *)(x))[0] + ((unsigned)((uint8_t  *)(x))[1] << 8) + \
+	((unsigned)((uint8_t  *)(x))[2] << 16) + ((unsigned)((uint8_t  *)(x))[3] << 24))
+#define LMMHw(x) ((unsigned)((uint8_t  *)(&x))[0] + ((unsigned)((uint8_t  *)(&x))[1] << 8))
 
 
 typedef struct {				/* exe file header, just the signature really */
-		 Byte	sigLo;			/* .EXE signature: 0x4D 0x5A	 */
-		 Byte	sigHi;
+		 uint8_t 	sigLo;			/* .EXE signature: 0x4D 0x5A	 */
+		 uint8_t 	sigHi;
 } Header;
 
 //#ifdef WIN32
@@ -51,68 +52,68 @@ typedef struct {				/* exe file header, just the signature really */
 //#endif
 
 typedef struct {
-  Byte sigLo;
-  Byte sigHi;
-  Byte byteord;
-  Byte wordord;
-  DWord formatlvl;
-  SWord cputype;
-  SWord ostype;
-  DWord modulever;
-  DWord moduleflags;
-  DWord modulenumpages;
-  DWord eipobjectnum;
-  DWord eip;
-  DWord espobjectnum;
-  DWord esp;
-  DWord pagesize;
-  DWord pageoffsetshift;
-  DWord fixupsectionsize;
-  DWord fixupsectionchksum;
-  DWord loadersectionsize;
-  DWord loadersectionchksum;
-  DWord objtbloffset;
-  DWord numobjsinmodule;
-  DWord objpagetbloffset;
-  DWord objiterpagesoffset;
-  DWord resourcetbloffset;
-  DWord numresourcetblentries;
-  DWord residentnametbloffset;
-  DWord entrytbloffset;
-  DWord moduledirectivesoffset;
-  DWord nummoduledirectives;
-  DWord fixuppagetbloffset;
-  DWord fixuprecordtbloffset;
-  DWord importtbloffset;
-  DWord numimportmoduleentries;
-  DWord importproctbloffset;
-  DWord perpagechksumoffset;
-  DWord datapagesoffset;
-  DWord numpreloadpages;
-  DWord nonresnametbloffset;
-  DWord nonresnametbllen;
-  DWord nonresnametblchksum;
-  DWord autodsobjectnum;
-  DWord debuginfooffset;
-  DWord debuginfolen;
-  DWord numinstancepreload;
-  DWord numinstancedemand;
-  DWord heapsize;
+  uint8_t  sigLo;
+  uint8_t  sigHi;
+  uint8_t  byteord;
+  uint8_t  wordord;
+  uint32_t formatlvl;
+  uint16_t cputype;
+  uint16_t ostype;
+  uint32_t modulever;
+  uint32_t moduleflags;
+  uint32_t modulenumpages;
+  uint32_t eipobjectnum;
+  uint32_t eip;
+  uint32_t espobjectnum;
+  uint32_t esp;
+  uint32_t pagesize;
+  uint32_t pageoffsetshift;
+  uint32_t fixupsectionsize;
+  uint32_t fixupsectionchksum;
+  uint32_t loadersectionsize;
+  uint32_t loadersectionchksum;
+  uint32_t objtbloffset;
+  uint32_t numobjsinmodule;
+  uint32_t objpagetbloffset;
+  uint32_t objiterpagesoffset;
+  uint32_t resourcetbloffset;
+  uint32_t numresourcetblentries;
+  uint32_t residentnametbloffset;
+  uint32_t entrytbloffset;
+  uint32_t moduledirectivesoffset;
+  uint32_t nummoduledirectives;
+  uint32_t fixuppagetbloffset;
+  uint32_t fixuprecordtbloffset;
+  uint32_t importtbloffset;
+  uint32_t numimportmoduleentries;
+  uint32_t importproctbloffset;
+  uint32_t perpagechksumoffset;
+  uint32_t datapagesoffset;
+  uint32_t numpreloadpages;
+  uint32_t nonresnametbloffset;
+  uint32_t nonresnametbllen;
+  uint32_t nonresnametblchksum;
+  uint32_t autodsobjectnum;
+  uint32_t debuginfooffset;
+  uint32_t debuginfolen;
+  uint32_t numinstancepreload;
+  uint32_t numinstancedemand;
+  uint32_t heapsize;
 } LXHeader;
 
 typedef struct {
-  DWord VirtualSize;
-  DWord RelocBaseAddr;
-  DWord ObjectFlags;
-  DWord PageTblIdx;
-  DWord NumPageTblEntries;
-  DWord Reserved1;
+  uint32_t VirtualSize;
+  uint32_t RelocBaseAddr;
+  uint32_t ObjectFlags;
+  uint32_t PageTblIdx;
+  uint32_t NumPageTblEntries;
+  uint32_t Reserved1;
 } LXObject;
 
 typedef struct {
-  DWord pagedataoffset;
-  SWord datasize;
-  SWord flags;
+  uint32_t pagedataoffset;
+  uint16_t datasize;
+  uint16_t flags;
 } LXPage;
 
 // this is correct for internal fixups only
@@ -149,7 +150,7 @@ public:
   virtual std::list<SectionInfo*>& GetEntryPoints(const char* pEntry = "main");
   virtual ADDRESS GetMainEntryPoint();
   virtual ADDRESS GetEntryPoint();
-  DWord getDelta();
+  uint32_t getDelta();
   virtual const char* SymbolByAddress(ADDRESS dwAddr); // Get sym from addr
   virtual ADDRESS GetAddressByName(const char* name,
 	bool bNoTypeOK = false);					// Find addr given name	 
@@ -195,7 +196,7 @@ virtual const char *GetDynamicProcName(ADDRESS uNative);
         LXPage*   m_pLXPages;           // Pointer to lx pages
 		int		m_cbImage;				// Size of image
 		//int		m_cReloc;				// Number of relocation entries
-		//DWord*	m_pRelocTable;			// The relocation table
+		//uint32_t*	m_pRelocTable;			// The relocation table
 		char *	base;					// Beginning of the loaded image
 		// Map from address of dynamic pointers to library procedure names:
 		std::map<ADDRESS, std::string> dlprocptrs;

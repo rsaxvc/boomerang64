@@ -17,6 +17,7 @@
 
 #include "BinaryFile.h"
 #include <string>
+#include <stdint.h>
 
 /* $Revision: 1.20 $
  * This file contains the definition of the Win32BinaryFile class, and some
@@ -35,15 +36,15 @@
 // Given a little endian value x, load its value assuming little endian order
 // Note: must be able to take address of x
 // Note: Unlike the LH macro in BinaryFile.h, the parameter is not a pointer
-#define LMMH(x) ((unsigned)((Byte *)(&x))[0] + ((unsigned)((Byte *)(&x))[1] << 8) + \
-	((unsigned)((Byte *)(&x))[2] << 16) + ((unsigned)((Byte *)(&x))[3] << 24))
+#define LMMH(x) ((unsigned)((uint8_t *)(&x))[0] + ((unsigned)((uint8_t *)(&x))[1] << 8) + \
+	((unsigned)((uint8_t *)(&x))[2] << 16) + ((unsigned)((uint8_t *)(&x))[3] << 24))
 // With this one, x is a pointer to unsigned
-#define LMMH2(x) ((unsigned)((Byte *)(x))[0] + ((unsigned)((Byte *)(x))[1] << 8) + \
-	((unsigned)((Byte *)(x))[2] << 16) + ((unsigned)((Byte *)(x))[3] << 24))
+#define LMMH2(x) ((unsigned)((uint8_t *)(x))[0] + ((unsigned)((uint8_t *)(x))[1] << 8) + \
+	((unsigned)((uint8_t *)(x))[2] << 16) + ((unsigned)((uint8_t *)(x))[3] << 24))
 
 typedef struct {				/* exe file header, just the signature really */
-		 Byte	sigLo;			/* .EXE signature: 0x4D 0x5A	 */
-		 Byte	sigHi;
+		 uint8_t	sigLo;			/* .EXE signature: 0x4D 0x5A	 */
+		 uint8_t	sigHi;
 } Header;
 
 //#ifdef WIN32
@@ -51,105 +52,105 @@ typedef struct {				/* exe file header, just the signature really */
 //#endif
 
 typedef struct {
-  Byte sigLo;
-  Byte sigHi;
-  SWord sigver;
-  SWord cputype;
-  SWord numObjects;
-  DWord TimeDate;
-  DWord Reserved1;
-  DWord Reserved2;
-  SWord NtHdrSize;
-  SWord Flags;
-  SWord Reserved3;
-  Byte LMajor;
-  Byte LMinor;
-  DWord Reserved4;
-  DWord Reserved5;
-  DWord Reserved6;
-  DWord EntrypointRVA;
-  DWord Reserved7;
-  DWord Reserved8;
-  DWord Imagebase;
-  DWord ObjectAlign;
-  DWord FileAlign;
-  SWord OSMajor;
-  SWord OSMinor;
-  SWord UserMajor;
-  SWord UserMinor;
-  SWord SubsysMajor;
-  SWord SubsysMinor;
-  DWord Reserved9;
-  DWord ImageSize;
-  DWord HeaderSize;
-  DWord FileChecksum;
-  SWord Subsystem;
-  SWord DLLFlags;
-  DWord StackReserveSize;
-  DWord StackCommitSize;
-  DWord HeapReserveSize;
-  DWord HeapCommitSize;
-  DWord Reserved10;
-  DWord nInterestingRVASizes;
-  DWord ExportTableRVA;
-  DWord TotalExportDataSize;
-  DWord ImportTableRVA;
-  DWord TotalImportDataSize;
-  DWord ResourceTableRVA;
-  DWord TotalResourceDataSize;
-  DWord ExceptionTableRVA;
-  DWord TotalExceptionDataSize;
-  DWord SecurityTableRVA;
-  DWord TotalSecurityDataSize;
-  DWord FixupTableRVA;
-  DWord TotalFixupDataSize;
-  DWord DebugTableRVA;
-  DWord TotalDebugDirectories;
-  DWord ImageDescriptionRVA;
-  DWord TotalDescriptionSize;
-  DWord MachineSpecificRVA;
-  DWord MachineSpecificSize;
-  DWord ThreadLocalStorageRVA;
-  DWord TotalTLSSize;
+  uint8_t sigLo;
+  uint8_t sigHi;
+  uint16_t sigver;
+  uint16_t cputype;
+  uint16_t numObjects;
+  uint32_t TimeDate;
+  uint32_t Reserved1;
+  uint32_t Reserved2;
+  uint16_t NtHdrSize;
+  uint16_t Flags;
+  uint16_t Reserved3;
+  uint8_t  LMajor;
+  uint8_t  LMinor;
+  uint32_t Reserved4;
+  uint32_t Reserved5;
+  uint32_t Reserved6;
+  uint32_t EntrypointRVA;
+  uint32_t Reserved7;
+  uint32_t Reserved8;
+  uint32_t Imagebase;
+  uint32_t ObjectAlign;
+  uint32_t FileAlign;
+  uint16_t OSMajor;
+  uint16_t OSMinor;
+  uint16_t UserMajor;
+  uint16_t UserMinor;
+  uint16_t SubsysMajor;
+  uint16_t SubsysMinor;
+  uint32_t Reserved9;
+  uint32_t ImageSize;
+  uint32_t HeaderSize;
+  uint32_t FileChecksum;
+  uint16_t Subsystem;
+  uint16_t DLLFlags;
+  uint32_t StackReserveSize;
+  uint32_t StackCommitSize;
+  uint32_t HeapReserveSize;
+  uint32_t HeapCommitSize;
+  uint32_t Reserved10;
+  uint32_t nInterestingRVASizes;
+  uint32_t ExportTableRVA;
+  uint32_t TotalExportDataSize;
+  uint32_t ImportTableRVA;
+  uint32_t TotalImportDataSize;
+  uint32_t ResourceTableRVA;
+  uint32_t TotalResourceDataSize;
+  uint32_t ExceptionTableRVA;
+  uint32_t TotalExceptionDataSize;
+  uint32_t SecurityTableRVA;
+  uint32_t TotalSecurityDataSize;
+  uint32_t FixupTableRVA;
+  uint32_t TotalFixupDataSize;
+  uint32_t DebugTableRVA;
+  uint32_t TotalDebugDirectories;
+  uint32_t ImageDescriptionRVA;
+  uint32_t TotalDescriptionSize;
+  uint32_t MachineSpecificRVA;
+  uint32_t MachineSpecificSize;
+  uint32_t ThreadLocalStorageRVA;
+  uint32_t TotalTLSSize;
 } PEHeader;
 
 typedef struct {	// The real Win32 name of this struct is IMAGE_SECTION_HEADER
   char ObjectName[8];	// Name
-  DWord VirtualSize;
-  DWord RVA;			// VirtualAddress
-  DWord PhysicalSize;	// SizeOfRawData
-  DWord PhysicalOffset;	// PointerToRawData
-  DWord Reserved1;		// PointerToRelocations
-  DWord Reserved2;		// PointerToLinenumbers
-  DWord Reserved3;		// WORD NumberOfRelocations; WORD NumberOfLinenumbers;
-  DWord Flags;			// Characteristics
+  uint32_t VirtualSize;
+  uint32_t RVA;			// VirtualAddress
+  uint32_t PhysicalSize;	// SizeOfRawData
+  uint32_t PhysicalOffset;	// PointerToRawData
+  uint32_t Reserved1;		// PointerToRelocations
+  uint32_t Reserved2;		// PointerToLinenumbers
+  uint32_t Reserved3;		// WORD NumberOfRelocations; WORD NumberOfLinenumbers;
+  uint32_t Flags;			// Characteristics
 } PEObject;
 
 typedef struct {
-	DWord originalFirstThunk; // 0 for end of array; also ptr to hintNameArray
-	DWord preSnapDate;		// Time and date the import data was pre-snapped
+	uint32_t originalFirstThunk; // 0 for end of array; also ptr to hintNameArray
+	uint32_t preSnapDate;		// Time and date the import data was pre-snapped
 							// or zero if not pre-snapped
-	SWord verMajor;			// Major version number of dll being ref'd
-	SWord verMinor;			// Minor "		 "
-	DWord name;				// RVA of dll name (asciz)
-	DWord firstThunk;		// RVA of start of import address table (IAT)
+	uint16_t verMajor;			// Major version number of dll being ref'd
+	uint16_t verMinor;			// Minor "		 "
+	uint32_t name;				// RVA of dll name (asciz)
+	uint32_t firstThunk;		// RVA of start of import address table (IAT)
 } PEImportDtor;
 
 typedef struct {
-	DWord	flags;			// Reserved; 0
-	DWord	stamp;			// Time/date stamp export data was created
-	SWord	verMajor;		// Version number can be ...
-	SWord	verMinor;		//	 ... set by user
-	DWord	name;			// RVA of the ascii string containing the name of
+	uint32_t	flags;			// Reserved; 0
+	uint32_t	stamp;			// Time/date stamp export data was created
+	uint16_t	verMajor;		// Version number can be ...
+	uint16_t	verMinor;		//	 ... set by user
+	uint32_t	name;			// RVA of the ascii string containing the name of
 							//	 the DLL
-	DWord	base;			// Starting ordinal number for exports in this
+	uint32_t	base;			// Starting ordinal number for exports in this
 							//	image. Usually set to 1.
-	DWord	numEatEntries;	// Number of entries in EAT (Export ADdress Table)
-	DWord	numNptEntries;	// Number of entries in NPT (Name Pointer Table)
+	uint32_t	numEatEntries;	// Number of entries in EAT (Export ADdress Table)
+	uint32_t	numNptEntries;	// Number of entries in NPT (Name Pointer Table)
 							//	(also #entries in the Ordinal Table)
-	DWord	eatRVA;			// RVA of the EAT
-	DWord	nptRVA;			// RVA of the NPT
-	DWord	otRVA;			// RVA of the OT
+	uint32_t	eatRVA;			// RVA of the EAT
+	uint32_t	nptRVA;			// RVA of the NPT
+	uint32_t	otRVA;			// RVA of the OT
 } PEExportDtor;
 
 //#ifdef WIN32
@@ -177,7 +178,7 @@ virtual size_t		getImageSize();
 virtual std::list<SectionInfo*>& GetEntryPoints(const char* pEntry = "main");
 virtual ADDRESS		GetMainEntryPoint();
 virtual ADDRESS		GetEntryPoint();
-		DWord		getDelta();
+		uint32_t		getDelta();
 virtual const char* SymbolByAddress(ADDRESS dwAddr); // Get sym from addr
 virtual ADDRESS		GetAddressByName(const char* name, bool bNoTypeOK = false);		// Find addr given name	 
 virtual void		AddSymbol(ADDRESS uNative, const char *pName);
@@ -231,7 +232,7 @@ private:
 		PEHeader* 	m_pPEHeader;			// Pointer to pe header
 		int			m_cbImage;				// Size of image
 		int			m_cReloc;				// Number of relocation entries
-		DWord*		m_pRelocTable;			// The relocation table
+		uint32_t*		m_pRelocTable;			// The relocation table
 		char *		base;					// Beginning of the loaded image
 		// Map from address of dynamic pointers to library procedure names:
 		std::map<ADDRESS, std::string> dlprocptrs;

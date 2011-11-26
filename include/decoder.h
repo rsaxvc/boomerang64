@@ -24,6 +24,7 @@
 #define _DECODER_H_
 
 #include <list>
+#include <stdint.h>
 #include "types.h"
 #include "rtl.h"
 
@@ -254,17 +255,17 @@ void not_used(int unwanted);
 /*
  * Returns the byte (8 bits) starting at the given address.
  */
-Byte getByte(ADDRESS lc);
+uint8_t getByte(ADDRESS lc);
 
 /*
  * Returns the word (16 bits) starting at the given address.
  */
-SWord getWord(ADDRESS lc);
+uint16_t getWord(ADDRESS lc);
 
 /*
  * Returns the double (32 bits) starting at the given address.
  */
-DWord getDword(ADDRESS lc);
+uint32_t getDword(ADDRESS lc);
 
 
 #endif

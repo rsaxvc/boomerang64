@@ -5,14 +5,14 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-// Machine types
-typedef unsigned char		Byte;		/* 8 bits */
-typedef unsigned short		SWord;		/* 16 bits */
-typedef unsigned int		DWord;		/* 32 bits */
-typedef unsigned int		dword;		/* 32 bits */
-typedef unsigned int		Word;		/* 32 bits */
-typedef unsigned int		ADDRESS;	/* 32-bit unsigned */
+#include <stdint.h>
 
+// Machine types - please use stdint.h where applicable
+typedef uint8_t Byte;
+typedef uint16_t SWord;
+typedef uint32_t DWord;
+typedef uint32_t dword;
+typedef unsigned int		ADDRESS;	/* 32-bit unsigned */
 
 #define STD_SIZE	32					// Standard size
 // Note: there is a known name collision with NO_ADDRESS in WinSock.h

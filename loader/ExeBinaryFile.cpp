@@ -30,10 +30,10 @@ ExeBinaryFile::ExeBinaryFile()
 
 bool ExeBinaryFile::RealLoad(const char* sName)
 {
-	FILE   *fp;
-	int		i, cb;
-	Byte	buf[4];
-	int		fCOM;
+	FILE    *fp;
+	int     i, cb;
+	uint8_t buf[4];
+	int     fCOM;
 
         m_pFileName = sName;
 
@@ -89,8 +89,8 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 		 * less the length of the m_pHeader and reloc table
 		 * less the number of bytes unused on last page
 		*/
-		cb = (dword)LH(&m_pHeader->numPages) * 512 -
-			(dword)LH(&m_pHeader->numParaHeader) * 16;
+		cb = (uint32_t)LH(&m_pHeader->numPages) * 512 -
+			(uint32_t)LH(&m_pHeader->numParaHeader) * 16;
 		if (m_pHeader->lastPageSize)
 		{
 			cb -= 512 - LH(&m_pHeader->lastPageSize);
@@ -104,12 +104,12 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 		 * to have to load DS from a constant so it'll be pretty 
 		 * obvious.
 		*/
-		m_cReloc = (SWord)LH(&m_pHeader->numReloc);
+		m_cReloc = (uint16_t)LH(&m_pHeader->numReloc);
 
 		/* Allocate the relocation table */
 		if (m_cReloc)
 		{
-			m_pRelocTable = new dword[m_cReloc];
+			m_pRelocTable = new uint32_t[m_cReloc];
 			if (m_pRelocTable == 0)
 			{
 				fprintf(stderr, "Could not allocate relocation table "
@@ -155,7 +155,7 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 
 	/* Allocate a block of memory for the image. */
 	m_cbImage  = cb;
-	m_pImage    = new Byte[m_cbImage];
+	m_pImage    = new uint8_t[m_cbImage];
 
 	if (cb != (int)fread(m_pImage, 1, (size_t)cb, fp))
 	{
@@ -168,10 +168,10 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 	{
 		for (i = 0; i < m_cReloc; i++)
 		{
-			Byte *p = &m_pImage[m_pRelocTable[i]];
-			SWord  w = (SWord)LH(p);
-			*p++    = (Byte)(w & 0x00FF);
-			*p      = (Byte)((w & 0xFF00) >> 8);
+			uint8_t *p = &m_pImage[m_pRelocTable[i]];
+			uint16_t  w = (uint16_t)LH(p);
+			*p++    = (uint8_t)(w & 0x00FF);
+			*p      = (uint8_t)((w & 0xFF00) >> 8);
 		}
 	}
 
@@ -180,7 +180,7 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 	m_pSections[0].pSectionName = const_cast<char *>("$HEADER");	// Special header section
 //	m_pSections[0].fSectionFlags = ST_HEADER;
 	m_pSections[0].uNativeAddr = 0;				// Not applicable
-	m_pSections[0].uHostAddr = (DWord)m_pHeader;
+	m_pSections[0].uHostAddr = (uint32_t)m_pHeader;
 	m_pSections[0].uSectionSize = sizeof(exeHeader);
 	m_pSections[0].uSectionEntrySize = 1;		// Not applicable
 
@@ -188,16 +188,16 @@ bool ExeBinaryFile::RealLoad(const char* sName)
 	m_pSections[1].bCode = true;
 	m_pSections[1].bData = true;
 	m_pSections[1].uNativeAddr = 0;
-	m_pSections[1].uHostAddr = (DWord)m_pImage;
+	m_pSections[1].uHostAddr = (uint32_t)m_pImage;
 	m_pSections[1].uSectionSize = m_cbImage;
 	m_pSections[1].uSectionEntrySize = 1;		// Not applicable
 
 	m_pSections[2].pSectionName = const_cast<char *>("$RELOC");		// Special relocation section
 //	m_pSections[2].fSectionFlags = ST_RELOC;	// Give it a special flag
 	m_pSections[2].uNativeAddr = 0;				// Not applicable
-	m_pSections[2].uHostAddr = (DWord)m_pRelocTable;
-	m_pSections[2].uSectionSize = sizeof(DWord) * m_cReloc;
-	m_pSections[2].uSectionEntrySize = sizeof(DWord);
+	m_pSections[2].uHostAddr = (uint32_t)m_pRelocTable;
+	m_pSections[2].uSectionSize = sizeof(uint32_t) * m_cReloc;
+	m_pSections[2].uSectionEntrySize = sizeof(uint32_t);
 
 	return 1;
 

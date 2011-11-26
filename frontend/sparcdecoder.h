@@ -23,6 +23,8 @@
 #ifndef SPARCDECODER
 #define SPARCDECODER
 
+#include <stdint.h>
+
 class Prog;
 class NJMCDecoder;
 struct DecodeResult;

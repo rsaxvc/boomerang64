@@ -41,6 +41,8 @@
 #include <vector>
 #include <map>
 
+#include <stdint.h>//remove this later - should only include where needed.
+
 #include "types.h"
 
 class Log;

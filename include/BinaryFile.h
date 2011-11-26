@@ -39,7 +39,7 @@
 
 // Given a pointer p, returns the 16 bits (halfword) in the two bytes
 // starting at p.
-#define LH(p)  ((int)((Byte *)(p))[0] + ((int)((Byte *)(p))[1] << 8))
+#define LH(p)  ((int)((uint8_t *)(p))[0] + ((int)((uint8_t *)(p))[1] << 8))
 
 // Some Windows voodoo; Windows doesn't seem to export everything unless you tell it to
 #ifdef _WIN32
