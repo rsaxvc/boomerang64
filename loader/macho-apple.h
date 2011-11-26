@@ -27,6 +27,8 @@
  * This file describes the format of mach object files.
  */
 
+#include <stdint.h>
+
 /*
  * <mach/machine.h> is needed here for the cpu_type_t and cpu_subtype_t types
  * and contains the constants for the possible values of these types.
@@ -54,13 +56,13 @@
  * The mach header appears at the very beginning of the object file.
  */
 struct mach_header {
-	unsigned long	magic;		/* mach magic number identifier */
-	cpu_type_t	cputype;	/* cpu specifier */
-	cpu_subtype_t	cpusubtype;	/* machine specifier */
-	unsigned long	filetype;	/* type of file */
-	unsigned long	ncmds;		/* number of load commands */
-	unsigned long	sizeofcmds;	/* the size of all the load commands */
-	unsigned long	flags;		/* flags */
+	uint32_t        magic;          /* mach magic number identifier */
+	cpu_type_t      cputype;        /* cpu specifier */
+	cpu_subtype_t   cpusubtype;     /* machine specifier */
+	uint32_t        filetype;       /* type of file */
+	uint32_t        ncmds;          /* number of load commands */
+	uint32_t        sizeofcmds;     /* the size of all the load commands */
+	uint32_t        flags;          /* flags */
 };
 
 /* Constant for the magic field of the mach_header */
@@ -159,8 +161,8 @@ struct mach_header {
  * padding zeroed like objects will compare byte for byte.
  */
 struct load_command {
-	unsigned long cmd;		/* type of load command */
-	unsigned long cmdsize;		/* total size of command in bytes */
+	uint32_t cmd;		/* type of load command */
+	uint32_t cmdsize;		/* total size of command in bytes */
 };
 
 /*
@@ -231,17 +233,17 @@ union lc_str {
  * reflected in cmdsize.
  */
 struct segment_command {
-	unsigned long	cmd;		/* LC_SEGMENT */
-	unsigned long	cmdsize;	/* includes sizeof section structs */
-	char		segname[16];	/* segment name */
-	unsigned long	vmaddr;		/* memory address of this segment */
-	unsigned long	vmsize;		/* memory size of this segment */
-	unsigned long	fileoff;	/* file offset of this segment */
-	unsigned long	filesize;	/* amount to map from the file */
-	vm_prot_t	maxprot;	/* maximum VM protection */
-	vm_prot_t	initprot;	/* initial VM protection */
-	unsigned long	nsects;		/* number of sections in segment */
-	unsigned long	flags;		/* flags */
+	uint32_t        cmd;            /* LC_SEGMENT */
+	uint32_t        cmdsize;        /* includes sizeof section structs */
+	char            segname[16];    /* segment name */
+	uint32_t        vmaddr;         /* memory address of this segment */
+	uint32_t        vmsize;         /* memory size of this segment */
+	uint32_t        fileoff;        /* file offset of this segment */
+	uint32_t        filesize;       /* amount to map from the file */
+	uint32_t        maxprot;        /* maximum VM protection */
+	vm_prot_t       initprot;       /* initial VM protection */
+	uint32_t        nsects;         /* number of sections in segment */
+	uint32_t        flags;          /* flags */
 };
 
 /* Constants for the flags field of the segment_command */
@@ -281,17 +283,17 @@ struct segment_command {
  * header file <reloc.h>.
  */
 struct section {
-	char		sectname[16];	/* name of this section */
-	char		segname[16];	/* segment this section goes in */
-	unsigned long	addr;		/* memory address of this section */
-	unsigned long	size;		/* size in bytes of this section */
-	unsigned long	offset;		/* file offset of this section */
-	unsigned long	align;		/* section alignment (power of 2) */
-	unsigned long	reloff;		/* file offset of relocation entries */
-	unsigned long	nreloc;		/* number of relocation entries */
-	unsigned long	flags;		/* flags (section type and attributes)*/
-	unsigned long	reserved1;	/* reserved */
-	unsigned long	reserved2;	/* reserved */
+	char     sectname[16];  /* name of this section */
+	char     segname[16];   /* segment this section goes in */
+	uint32_t addr;          /* memory address of this section */
+	uint32_t size;          /* size in bytes of this section */
+	uint32_t offset;        /* file offset of this section */
+	uint32_t align;         /* section alignment (power of 2) */
+	uint32_t reloff;        /* file offset of relocation entries */
+	uint32_t nreloc;        /* number of relocation entries */
+	uint32_t flags;         /* flags (section type and attributes)*/
+	uint32_t reserved1;     /* reserved */
+	uint32_t reserved2;     /* reserved */
 };
 
 /*
@@ -422,9 +424,9 @@ struct section {
  * header_addr.
  */
 struct fvmlib {
-	union lc_str	name;		/* library's target pathname */
-	unsigned long	minor_version;	/* library's minor version number */
-	unsigned long	header_addr;	/* library's header address */
+	union lc_str name;              /* library's target pathname */
+	uint32_t     minor_version;     /* library's minor version number */
+	uint32_t     header_addr;       /* library's header address */
 };
 
 /*
@@ -434,9 +436,9 @@ struct fvmlib {
  * fvmlib_command (cmd == LC_LOADFVMLIB) for each library it uses.
  */
 struct fvmlib_command {
-	unsigned long	cmd;		/* LC_IDFVMLIB or LC_LOADFVMLIB */
-	unsigned long	cmdsize;	/* includes pathname string */
-	struct fvmlib	fvmlib;		/* the library identification */
+	uint32_t      cmd;     /* LC_IDFVMLIB or LC_LOADFVMLIB */
+	uint32_t      cmdsize; /* includes pathname string */
+	struct fvmlib fvmlib;  /* the library identification */
 };
 
 /*
@@ -449,10 +451,10 @@ struct fvmlib_command {
  * at runtime is exactly the same as used to built the program.
  */
 struct dylib {
-    union lc_str  name;			/* library's path name */
-    unsigned long timestamp;		/* library's build time stamp */
-    unsigned long current_version;	/* library's current version number */
-    unsigned long compatibility_version;/* library's compatibility vers number*/
+    union lc_str name;                  /* library's path name */
+    uint32_t     timestamp;             /* library's build time stamp */
+    uint32_t     current_version;       /* library's current version number */
+    uint32_t     compatibility_version; /* library's compatibility vers number*/
 };
 
 /*
@@ -463,9 +465,9 @@ struct dylib {
  * library it uses.
  */
 struct dylib_command {
-	unsigned long	cmd;		/* LC_ID_DYLIB, LC_LOAD_{,WEAK_}DYLIB */
-	unsigned long	cmdsize;	/* includes pathname string */
-	struct dylib	dylib;		/* the library identification */
+    uint32_t     cmd;     /* LC_ID_DYLIB, LC_LOAD_{,WEAK_}DYLIB */
+    uint32_t     cmdsize; /* includes pathname string */
+    struct dylib dylib;   /* the library identification */
 };
 
 /*

@@ -1,6 +1,8 @@
 #ifndef __INTELCOFFFILE_H__
 #define __INTELCOFFFILE_H__
 
+#include <stdint.h>
+
 #include "BinaryFile.h"
 #include "SymTab.h"
 
@@ -8,13 +10,13 @@
 
 struct coff_header
 {
-        unsigned short  coff_magic;
-        unsigned short  coff_sections;
-        unsigned long   coff_timestamp;
-        unsigned long   coff_symtab_ofs;
-        unsigned long   coff_num_syment;
-        unsigned short  coff_opthead_size;
-        unsigned short  coff_flags;
+        uint16_t coff_magic;
+        uint16_t coff_sections;
+        uint32_t coff_timestamp;
+        uint32_t coff_symtab_ofs;
+        uint32_t coff_num_syment;
+        uint16_t coff_opthead_size;
+        uint16_t coff_flags;
 } PACKED;
 
 class IntelCoffFile : public BinaryFile
