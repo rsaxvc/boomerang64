@@ -1,0 +1,17 @@
+*.o
+Makefile
+boomerang
+config.log
+config.status
+db/Makefile
+frontend/Makefile
+frontend/mltk.sh
+include/config.h
+include/gc.h
+include/gc_config_macros.h
+lib/
+loader/Makefile
+output/log
+transform/Makefile
+util/Makefile
+
