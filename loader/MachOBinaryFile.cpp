@@ -27,8 +27,10 @@
 #include "BinaryFile.h"
 #include "MachOBinaryFile.h"
 #include "config.h"
+#include <stdlib.h>
 #include <iostream>
 #include <sstream>
+#include <string.h>
 #include <assert.h>
 
 #include "nlist.h"
