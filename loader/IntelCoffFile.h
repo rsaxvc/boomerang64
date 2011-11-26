@@ -8,13 +8,13 @@
 
 struct coff_header
 {
-        ushort  coff_magic;
-        ushort  coff_sections;
-        ulong   coff_timestamp;
-        ulong   coff_symtab_ofs;
-        ulong   coff_num_syment;
-        ushort  coff_opthead_size;
-        ushort  coff_flags;
+        unsigned short  coff_magic;
+        unsigned short  coff_sections;
+        unsigned long   coff_timestamp;
+        unsigned long   coff_symtab_ofs;
+        unsigned long   coff_num_syment;
+        unsigned short  coff_opthead_size;
+        unsigned short  coff_flags;
 } PACKED;
 
 class IntelCoffFile : public BinaryFile
