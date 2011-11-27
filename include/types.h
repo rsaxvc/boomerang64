@@ -12,7 +12,7 @@ typedef uint8_t Byte;
 typedef uint16_t SWord;
 typedef uint32_t DWord;
 typedef uint32_t dword;
-typedef unsigned int		ADDRESS;	/* 32-bit unsigned */
+typedef uintptr_t		ADDRESS;	/* 32-bit unsigned */
 
 #define STD_SIZE	32					// Standard size
 // Note: there is a known name collision with NO_ADDRESS in WinSock.h
